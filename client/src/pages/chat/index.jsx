@@ -16,7 +16,7 @@ function chat() {
 
     return (
         <div>
-            {userInfo.lastName} {userInfo.firstName}
+        "The OG" {userInfo.firstName} {userInfo.lastName} 
         </div>
     );
 }

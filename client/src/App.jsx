@@ -21,7 +21,7 @@ const AuthRoute = ({ children }) => {
 };
 
 function App() {
-  const {useInfo, setuserinfo} = useAppStore()
+  const {userInfo, setuserinfo} = useAppStore()
   const [loading , setloading] = useState(true);
 
   useEffect(()=>{
@@ -41,12 +41,12 @@ function App() {
           setloading(false)
         }
      }
-     if(!useInfo){
+     if(!userInfo){
       getuserdata()
      }else{
       setloading(false);
      }
-    },[useInfo, setuserinfo])
+    },[userInfo, setuserinfo])
     
     if(loading){
       return <div>Loading........</div>

@@ -1,6 +1,7 @@
 import { compare } from "bcrypt";
 import User from "../models/userschema.js";
 import jwt from "jsonwebtoken";
+import { renameSync, unlinkSync } from "fs";
 
 const maxage = 3 * 24 * 60 * 60 * 1000;
 
@@ -107,18 +108,18 @@ const updateprofile = async (req, res, next) => {
     }
 
     const userData = await User.findByIdAndUpdate(
-        userid,
-        {
-          firstName,
-          lastName,
-          color,
-          profilesetup: true,
-        },
-        {
-          new: true,         
-          runValidators: true
-        }
-      );
+      userid,
+      {
+        firstName,
+        lastName,
+        color,
+        profilesetup: true,
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
 
     return res.status(200).json({
       id: userData.id,
@@ -134,4 +135,59 @@ const updateprofile = async (req, res, next) => {
   }
 };
 
-export { signup, login, getuserinfo, updateprofile };
+const updateprofileimage = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      return res.status(404).json({ message: "File is required" });
+    }
+    const date = Date.now();
+    let fileName = "uploads/profiles/" + date + req.file.originalname;
+    renameSync(req.file.path, fileName);
+
+    const updateduser = await User.findByIdAndUpdate(
+      req.userid,
+      { image: fileName },
+      { new: true },
+      { runValidators: true }
+    );
+
+    return res.status(200).json({
+      image: updateduser.image,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+const deleteprofileimage = async (req, res, next) => {
+  try {
+    const { userid } = req;
+    const user = await User.findById(userid);
+
+    if (!user) {
+      return res.status(404).json({ message: "User Not found" });
+    }
+    if (user.image) {
+      unlinkSync(user.image);
+    }
+
+    user.image = null;
+    await user.save();
+
+    return res.status(200).json({ message: "Image Removed" });
+    
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export {
+  signup,
+  login,
+  getuserinfo,
+  updateprofile,
+  updateprofileimage,
+  deleteprofileimage,
+};

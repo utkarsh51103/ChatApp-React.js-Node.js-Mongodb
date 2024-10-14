@@ -1,5 +1,5 @@
 import { useAppStore } from "@/store";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IoArrowBack } from "react-icons/io5";
 import { colors, getColor } from "@/lib/utils";
 import { FaTrash, FaPlus } from "react-icons/fa";
@@ -9,45 +9,111 @@ import HOST, { UPDATE_PROFILE_ROUTE } from "@/utils/constants";
 import { useNavigate } from "react-router-dom";
 
 function Profile() {
-    const navigate = useNavigate()
+  const navigate = useNavigate();
   const { userInfo, setuserinfo } = useAppStore();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [image, setImage] = useState(null);
   const [hovered, setHovered] = useState(false);
   const [selectedColor, setSelectedColor] = useState(0);
-  const validateprofile = ()=>{
-    if(!firstName){
-        toast.error("First Name is Required")
-        return false;
+  const fileinput = useRef(null);
+
+  useEffect(() => {
+    if (userInfo.profilesetup) {
+      setFirstName(userInfo.firstName);
+      setLastName(userInfo.lastName);
+      setSelectedColor(userInfo.color);
     }
-    if(!lastName){
-        toast.error("Last Name is Required")
-        return false;
+    if(userInfo.image){
+      const imageURL = `${HOST}/${userInfo.image}`
+      console.log(imageURL);
+      setImage(imageURL)
+    }
+  }, [userInfo]);
+
+  const validateprofile = () => {
+    if (!firstName) {
+      toast.error("First Name is Required");
+      return false;
+    }
+    if (!lastName) {
+      toast.error("Last Name is Required");
+      return false;
     }
     return true;
-  }
+  };
   const saveChanges = async () => {
-    if(validateprofile()){
-        try {
-            console.log(UPDATE_PROFILE_ROUTE)
-            const response = await axios.post(`${HOST}/${UPDATE_PROFILE_ROUTE}`,{firstName,lastName,color:selectedColor},{withCredentials:true})
+    if (validateprofile()) {
+      try {
+        console.log(UPDATE_PROFILE_ROUTE);
+        const response = await axios.post(
+          `${HOST}/${UPDATE_PROFILE_ROUTE}`,
+          { firstName, lastName, color: selectedColor },
+          { withCredentials: true }
+        );
 
-            if(response.status===200 && response.data){
-                setuserinfo(response.data)
-                toast.success("Profile updated successfully")
-                navigate("/chat")
-            }
-        } catch (error) {
-            console.log(error)
+        if (response.status === 200 && response.data) {
+          setuserinfo(response.data);
+          toast.success("Profile updated successfully");
+          navigate("/chat");
         }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  const handlenavigate = () => {
+    if (userInfo.profilesetup) {
+      navigate("/chat");
+    } else {
+      toast.error("Please Setup Profile");
+    }
+  };
+
+  const handlefileinputclick = () => {
+    fileinput.current.click();
+  };
+
+  const handleimagechange = async (e) => {
+    try {
+    const file = e.target.files[0];
+    console.log({file});
+    if (file) {
+      const formdata = new FormData();
+      formdata.append("profile-image", file);
+      const response = await axios.post(
+        `${HOST}/api/auth/add-profile-image`,
+        formdata,
+        { withCredentials: true }
+      );
+      if (response.status === 200 && response.data.image) {
+        setuserinfo({ ...userInfo, image: response.data.image });
+        toast.success("Image Updated Successfully");
+      }
+    }
+      
+    } catch (error) {
+      console.log(error); 
+    }
+  };
+
+  const handledeleteimage = async () => {
+    try {
+      const response = await axios.delete(`${HOST}/api/auth/remove-profile-image`,{withCredentials:true})
+      if(response.status === 200 && response.data.message){
+        setuserinfo({...userInfo, image:null})
+        toast.success(response.data.message)
+    }
+   } catch (error) {
+     console.log(error);  
     }
   };
 
   return (
     <div className="bg-[#1b1c24] h-[100vh] flex items-center justify-center flex-col gap-10">
       <div className="flex flex-col gap-10 w-[100vw] md:w-max sm:ml-44 md:ml-0">
-        <div>
+        <div onClick={handlenavigate}>
           <IoArrowBack className="text-4xl lg:text-6xl text-white/90 cursor-pointer" />
         </div>
         <div className="grid grid-cols-2 sm:flex sm:gap-20">
@@ -65,7 +131,9 @@ function Profile() {
                 />
               ) : (
                 <div
-                  className={`uppercase h-32 w-32 md:h-48 md:w-48 text-5xl border-[1px] flex items-center justify-center rounded-full ${getColor(selectedColor)}`}
+                  className={`uppercase h-32 w-32 md:h-48 md:w-48 text-5xl border-[1px] flex items-center justify-center rounded-full ${getColor(
+                    selectedColor
+                  )}`}
                 >
                   {firstName
                     ? firstName.split("").shift()
@@ -74,7 +142,10 @@ function Profile() {
               )}
             </div>
             {hovered && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full sm:my-[90px] md:my-0 ">
+              <div
+                className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full sm:my-[90px] md:my-0 "
+                onClick={image ? handledeleteimage : handlefileinputclick}
+              >
                 {image ? (
                   <FaTrash className="text-white text-3xl" />
                 ) : (
@@ -82,6 +153,14 @@ function Profile() {
                 )}
               </div>
             )}
+            <input
+              type="file"
+              ref={fileinput}
+              className="hidden"
+              onChange={handleimagechange}
+              name="profile-image"
+              accept=".png, .jpg, .jpeg, .svg, .webp"
+            />
           </div>
           <div className="flex min-w-48 md:min-w-68 flex-col gap-5 text-white items-center justify-center">
             <div className="w-full rounded-lg">
@@ -114,15 +193,28 @@ function Profile() {
             <div className="w-full flex gap-5 ">
               {colors.map((color, index) => (
                 <div
-                  className={`${color} h-8 w-8 cursor-pointer transition-all duration-100 rounded-full ${selectedColor === index ? "outline outline-white/50 outline-2" : ""}`} key={index}
-                  onClick={()=>{setSelectedColor(index);console.log(index)}}                  
+                  className={`${color} h-8 w-8 cursor-pointer transition-all duration-100 rounded-full ${
+                    selectedColor === index
+                      ? "outline outline-white/50 outline-2"
+                      : ""
+                  }`}
+                  key={index}
+                  onClick={() => {
+                    setSelectedColor(index);
+                    console.log(index);
+                  }}
                 ></div>
               ))}
             </div>
           </div>
         </div>
-        <div className="w-full md:flex items-center justify-center" >
-          <button className="h-12 rounded-3xl bg-purple-700 w-full hover:bg-purple-900 text-white transition-all duration-100 sm:w-[60vh]" onClick={saveChanges}>Sava Changes</button>
+        <div className="w-full md:flex items-center justify-center">
+          <button
+            className="h-12 rounded-3xl bg-purple-700 w-full hover:bg-purple-900 text-white transition-all duration-100 sm:w-[60vh]"
+            onClick={saveChanges}
+          >
+            Sava Changes
+          </button>
         </div>
       </div>
     </div>

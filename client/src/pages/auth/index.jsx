@@ -78,7 +78,7 @@ function auth() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#1b1c24]">
     <div className="flex flex-col m-auto my-28 w-[600px]  bg-[#2c2e3b] pb-8 rounded-xl">
-      <div className="flex flex-col items-center gap-2 container mt-8 text-white text-5xl font-medium">
+      <div className="flex flex-col items-center gap-2 container mt-8 text-white text-5xl font-medium ">
         <div>{action}</div>
         <div className="w-20 h-1.5 bg-white rounded-2xl"></div>
       </div>
