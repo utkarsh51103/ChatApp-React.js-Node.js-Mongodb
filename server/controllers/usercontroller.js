@@ -176,7 +176,7 @@ const deleteprofileimage = async (req, res, next) => {
     await user.save();
 
     return res.status(200).json({ message: "Image Removed" });
-    
+
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal Server Error" });

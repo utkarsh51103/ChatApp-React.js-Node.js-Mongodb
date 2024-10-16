@@ -10,7 +10,7 @@ import {
 import verifytoken from "../middlewares/AuthMiddleware.js";
 import multer from "multer";
 
-const upload = multer({ dest: "uploads/profiles" });
+const upload = multer({ dest: "uploads/profiles"});
 
 const authroute = Router();
 

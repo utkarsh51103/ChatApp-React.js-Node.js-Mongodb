@@ -26,7 +26,6 @@ function Profile() {
     }
     if(userInfo.image){
       const imageURL = `${HOST}/${userInfo.image}`
-      console.log(imageURL);
       setImage(imageURL)
     }
   }, [userInfo]);
@@ -48,7 +47,7 @@ function Profile() {
         console.log(UPDATE_PROFILE_ROUTE);
         const response = await axios.post(
           `${HOST}/${UPDATE_PROFILE_ROUTE}`,
-          { firstName, lastName, color: selectedColor },
+          { firstName, lastName, color: selectedColor},
           { withCredentials: true }
         );
 
