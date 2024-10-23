@@ -92,6 +92,7 @@ const getuserinfo = async (req, res, next) => {
       firstName: userData.firstName,
       lastName: userData.lastName,
       color: userData.color,
+      image: userData.image
     });
   } catch (error) {
     console.log(error);
@@ -103,7 +104,7 @@ const updateprofile = async (req, res, next) => {
   try {
     const { userid } = req;
     const { firstName, lastName, color } = req.body;
-    if (!firstName || !lastName || !color) {
+    if (!firstName || !lastName || color==null) {
       return res.status(404).send("FirstName,LastName and Color are required");
     }
 

@@ -2,6 +2,9 @@ import { useAppStore } from "@/store";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import ContactContainer from "./components/contact-container";
+import EmptyChatContainer from "./components/empty-chat-container";
+import ChatContainer from "./components/chat-container";
 
 function chat() {
 
@@ -15,8 +18,10 @@ function chat() {
    },[])
 
     return (
-        <div>
-        "The OG" {userInfo.firstName} {userInfo.lastName} 
+        <div className="flex h-[100vh] text-white overflow-hidden">
+        <ContactContainer/>
+        <EmptyChatContainer/>
+        <ChatContainer/>
         </div>
     );
 }

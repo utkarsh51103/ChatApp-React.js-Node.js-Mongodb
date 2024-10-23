@@ -15,14 +15,14 @@ function Profile() {
   const [lastName, setLastName] = useState("");
   const [image, setImage] = useState(null);
   const [hovered, setHovered] = useState(false);
-  const [selectedColor, setSelectedColor] = useState(0);
+  const [selectedColor, setSelectedColor] = useState(null);
   const fileinput = useRef(null);
 
   useEffect(() => {
     if (userInfo.profilesetup) {
       setFirstName(userInfo.firstName);
       setLastName(userInfo.lastName);
-      setSelectedColor(userInfo.color);
+      setSelectedColor(userInfo.color ?? 0);
     }
     if(userInfo.image){
       const imageURL = `${HOST}/${userInfo.image}`
@@ -44,10 +44,9 @@ function Profile() {
   const saveChanges = async () => {
     if (validateprofile()) {
       try {
-        console.log(UPDATE_PROFILE_ROUTE);
         const response = await axios.post(
           `${HOST}/${UPDATE_PROFILE_ROUTE}`,
-          { firstName, lastName, color: selectedColor},
+          { firstName, lastName, color :selectedColor},
           { withCredentials: true }
         );
 
@@ -103,6 +102,7 @@ function Profile() {
       if(response.status === 200 && response.data.message){
         setuserinfo({...userInfo, image:null})
         toast.success(response.data.message)
+        setImage(null);
     }
    } catch (error) {
      console.log(error);  
