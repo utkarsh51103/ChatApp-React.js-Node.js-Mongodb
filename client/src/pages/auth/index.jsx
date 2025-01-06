@@ -5,9 +5,7 @@ import { RiLockPasswordFill } from "react-icons/ri";
 import "./style.css";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import SIGNUP_ROUTE from "@/utils/constants";
-import apiclient from "@/lib/api-client";
-import HOST, {LOGIN_ROUTE} from "@/utils/constants";
+import HOST from "@/utils/constants";
 import { useAppStore } from "@/store";
 import axios from "axios";
 
@@ -16,7 +14,6 @@ function auth() {
   const {setuserinfo} = useAppStore()
   const [password, setpassword] = useState("");
   const [email, setemail] = useState("");
-  const host = HOST
   const [confirmpassword, setconfirmpassword] = useState("");
 
   const navigate = useNavigate();

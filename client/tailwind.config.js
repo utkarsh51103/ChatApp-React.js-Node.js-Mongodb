@@ -7,6 +7,13 @@ export default {
   ],
   theme: {
   	extend: {},
+    screens: {
+      sm: '360px',  
+      md: '640px',  // Default for md
+      lg: '768px',  // Adjust if needed
+      xl: '1024px', // Adjust if needed
+      '2xl': '1280px', // Adjust if needed
+    },
   },
   plugins: [],
 }

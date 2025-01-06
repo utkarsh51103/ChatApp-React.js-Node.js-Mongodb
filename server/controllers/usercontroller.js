@@ -183,6 +183,15 @@ const deleteprofileimage = async (req, res, next) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+const handleLogout = async (req, res, next) => {
+  try {
+   res.cookie("jwt","",{maxage:1,secure:true,samSite:"None"})
+   res.status(200).json({message:"Logout Success"})
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
 
 export {
   signup,
@@ -191,4 +200,5 @@ export {
   updateprofile,
   updateprofileimage,
   deleteprofileimage,
+  handleLogout,
 };

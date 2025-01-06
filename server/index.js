@@ -4,11 +4,11 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import authroute from './routes/AuthRoute.js';
+import contactRoutes from './routes/contactroutes.js';
 
 dotenv.config();
 
 const app = express();
-
 app.use(cors({
     origin: process.env.ORIGIN,
     methods: ['GET','POST','PUT','PATCH','DELETE'],
@@ -21,6 +21,7 @@ app.use(cookieParser())
 app.use(express.json());
 
 app.use('/api/auth',authroute)
+app.use('/api/contacts',contactRoutes)
 
 const port = process.env.PORT || 5002;
 const database = process.env.MONGODB_CONNECTION;
