@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import authroute from './routes/AuthRoute.js';
 import contactRoutes from './routes/contactroutes.js';
+import setupsocket from './socket.js';
 
 dotenv.config();
 
@@ -29,6 +30,8 @@ const database = process.env.MONGODB_CONNECTION;
 app.listen(port,()=>{
     console.log(`Server is running on port ${port}`);
 })
+
+setupsocket(server)
 
 mongoose.connect(database)
 .then(()=>console.log('Connected to database'))

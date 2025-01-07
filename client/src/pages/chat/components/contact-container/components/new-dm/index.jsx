@@ -34,7 +34,7 @@ function Index() {
             
         }
     };
-    const selectnewContact = (contact) =>{
+    const selectNewContact = (contact) =>{
         setOpenNewContact(false);
         setsearchmsg("");
         setSearchedContact([])
@@ -62,7 +62,7 @@ function Index() {
                     <h1 className='tracking-widest text-white pl-5 font-bold text-opacity-90 text-sm my-5'>Please Select a Contact</h1>
                     <div>
                         <input 
-                            placeholder="Search Contacts" 
+                            placeholder="Search selectedChatData" 
                             className="rounded-lg p-3 bg-[#2c2e3b] border-none w-[50vw] md:w-[40vw] lg:w-[30vw] xl:w-[20vw] mt-2 overflow-hidden" 
                             onChange={e => {searchContact(e.target.value)
                             }} 
@@ -70,7 +70,7 @@ function Index() {
                     </div>
                     <div className="flex flex-col w-full ml-10 md:ml-15 lg:ml-20 overflow-y-scroll my-2">
                       {
-                        searchedContact.map((contacts)=><div key={contacts._id} className="mt-5 flex gap-3 items-center cursor-pointer" onClick={()=>selectnewContact(contacts)}>
+                        searchedContact.map((contacts)=><div key={contacts._id} className="mt-5 flex gap-3 items-center cursor-pointer" onClick={()=>selectNewContact(contacts)}>
                         <div className="w-14 h-12 relative">
                         <div className="h-10 w-10 md:h-12 md:w-12 rounded-full overflow-hidden">
                           {contacts.images ? (
@@ -106,7 +106,7 @@ function Index() {
                     </div>
                     {
                         searchedContact.length <= 0 ? (
-                            <div className='flex-1 md:flex flex-col justify-center items-center duration-1000 transition-all mt-10'>
+                            <div className='flex-1 md:flex flex-col justify-center items-center duration-1000 transition-all '>
                                 <Lottie
                                     isClickToPauseDisabled={true}
                                     height={100}
