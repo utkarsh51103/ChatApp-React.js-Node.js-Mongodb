@@ -1,5 +1,5 @@
 import { useAppStore } from "@/store";
-import React from "react";
+import React, { useState } from "react";
 import HOST from "@/utils/constants";
 import { getColor } from "@/lib/utils";
 import { CiEdit } from "react-icons/ci";
@@ -10,6 +10,7 @@ import { Tooltip } from "react-tooltip";
 
 function index() {
   const { userInfo ,setuserinfo} = useAppStore();
+  const [openLogout, setopenLogout] = useState(false);
   const navigate = useNavigate()
 
 const handleLogout = async() => {
@@ -55,9 +56,20 @@ const handleLogout = async() => {
       </div>
       <div className="flex gap-5">
         <CiEdit className="h-6 w-6 text-[#8417ff] cursor-pointer" onClick={()=>navigate('/profile')} data-tooltip-id="edit"/>
-        <IoPowerSharp className="h-6 w-6 text-red-700 cursor-pointer" onClick={handleLogout} data-tooltip-id="logout"/>
+        <IoPowerSharp className="h-6 w-6 text-red-700 cursor-pointer" onClick={()=>setopenLogout(true)} data-tooltip-id="logout"/>
         <Tooltip id="edit" content="Edit Profile"/>
         <Tooltip id="logout" content="Logout"/>
+        
+        {
+          openLogout === true ? <div className="fixed inset-0 bg-black opacity-75 z-40" onClick={()=>setopenLogout(false)}/>:null
+        }
+
+        <dialog open={openLogout} className="fixed z-50 bg-[#2a2b33] text-white p-5 rounded-md top-[40%] sm:left-[20%] md:left-[10%] lg:left-[5%] xl:left-[0%] text-center">
+            <p className="text-white">Do you want to </p><p className="text-purple-500">Logout</p>
+            <button className="mx-5 my-3 border-none bg-gray-700 px-4 py-2 rounded-lg" onClick={handleLogout}>Yes</button>
+            <button className="mx-5 my-3 border-none bg-gray-700 px-4 py-2 rounded-lg" onClick={()=> setopenLogout(false)}>No</button>
+        </dialog>
+        
       </div>
     </div>
   );
