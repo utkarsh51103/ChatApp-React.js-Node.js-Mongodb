@@ -27,7 +27,7 @@ app.use('/api/contacts',contactRoutes)
 const port = process.env.PORT || 5002;
 const database = process.env.MONGODB_CONNECTION;
 
-app.listen(port,()=>{
+const server = app.listen(port,()=>{
     console.log(`Server is running on port ${port}`);
 })
 
