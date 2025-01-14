@@ -1,4 +1,6 @@
+import mongoose from "mongoose";
 import User from "../models/userschema.js";
+import Messages from "../models/messageSchema.js";
 
 
 const searchcontact = async(req,res,next)=>{
@@ -32,4 +34,57 @@ try {
 }
 }
 
-export {searchcontact}
+const getContactsForDmList = async(req,res,next)=>{
+    try {
+       let {userid} = req;
+       userid = new mongoose.Types.ObjectId(userid); 
+    
+       const contacts = await Messages.aggregate([
+        {$match:{
+            $or:[
+                {sender:userid},{recipient:userid},
+            ],
+        },
+    } ,   {
+        $sort:{timeStamp:-1},
+    },
+    {$group:{
+        _id:{
+            $cond:{
+                if:{$eq:["$sender",userid]},
+                then:"$recipient",
+                else:"$sender"
+            }
+        },
+        lastMessageTime: {$first: "$timeStamp"},
+    },},
+      {$lookup:{
+        from:"users",
+        localField:"_id",
+        foreignField:"_id",
+        as:"contactInfo",
+      },},
+      {
+        $unwind: "$contactInfo",  
+      },
+      {
+        $project:{
+            _id: 1,
+            lastMessageTime:1,
+            email:"$contactInfo.email",
+            firstName:"$contactInfo.firstName",
+            lastName:"$contactInfo.lastName",
+            image:"$contactInfo.image",
+            color: "$contactInfo.color",
+        }
+      }
+       ])
+       res.status(200).json({contacts});
+    
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message:"Internal Server Error"})
+    }
+    }
+
+export {searchcontact, getContactsForDmList}

@@ -52,17 +52,16 @@ function Index() {
             <Tooltip id="tooltip-add" content="Select New Contact" />
 
             {openNewContact == true ? (
-                <div className="fixed inset-0 transition-all duration-400 bg-black bg-opacity-80 z-40" onClick={() =>{ setOpenNewContact(false)
-                setsearchmsg("");
-                }}/>) : null
+                <div className="fixed inset-0 transition-all duration-400 bg-black bg-opacity-80 z-40" onClick={() => setOpenNewContact(false)
+                }/>) : null
             }
 
-            <dialog open={openNewContact} className="rounded-2xl bg-black z-50">
-                <div className="bg-[#242530] absolute md:ml-[10vw] lg:ml-[20vw] xl:ml-[25vw] border-none rounded-2xl text-white w-[400px] h-[400px] flex flex-col items-center">
+            <dialog open={openNewContact} className="rounded-2xl bg-black z-50 sm:ml-[12vw] md:ml-[25vw] lg:ml-[30vw] xl:ml-[35vw]">
+                <div className="bg-[#242530] absolute border-none rounded-2xl text-white w-[400px] h-[400px] flex flex-col items-center">
                     <h1 className='tracking-widest text-purple-500 pl-5 font-semibold text-opacity-90 text-lg my-5'>Contacts</h1>
                     <div>
                         <input 
-                            placeholder="Search Here..." 
+                            placeholder="Search Here..."
                             className="rounded-lg p-3 bg-[#2c2e3b] border-none w-[50vw] md:w-[40vw] lg:w-[30vw] xl:w-[20vw] mt-2 overflow-hidden" 
                             onChange={e => {searchContact(e.target.value)
                             }} 

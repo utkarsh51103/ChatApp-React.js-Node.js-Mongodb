@@ -1,9 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ProfileInfo from './components/profile-info';
 import NewDm from './components/new-dm';
+import ContactList from './components/contact-list';
+import { useAppStore } from '@/store';
+import axios from 'axios';
+import HOST from '@/utils/constants';
 function ContactContainer() {
+
+  const {selectedChatType , setDirectMessagesContacts, directMessagesContacts} = useAppStore()
+
+  useEffect(()=>{
+    const getcontacts = async ( ) =>{
+        const response = await axios.get(`${HOST}/api/contacts/get-contact-dm`,{withCredentials:true});
+        if(response.data.contacts){
+          setDirectMessagesContacts(response.data.contacts);
+        }
+    }
+
+    getcontacts();
+  },[])
+    
     return (
-        <div className='relative md:w-[35vw] lg:w-[30vw] xl:w-[25vw] bg-[#1b1c24] border-r-2 border-[#2f303b] w-screen '>
+        <div className={`relative md:w-[35vw] lg:w-[30vw] xl:w-[25vw] bg-[#1b1c24] border-r-2 border-[#2f303b] w-screen ${selectedChatType ? 'hidden md:block' : ''}`}>
             <div>
             <Logo/>
             </div>
@@ -11,6 +29,9 @@ function ContactContainer() {
                  <div className='flex items-center justify-between pr-10'>
                  <Title text="Direct Messages"/>
                  <NewDm/>
+                 </div>
+                 <div className='max-h-[38vh] overflow-y-auto scrollbar-hidden'>
+                 <ContactList contact={directMessagesContacts}/>
                  </div>
             </div>
             <div className='my-5'>

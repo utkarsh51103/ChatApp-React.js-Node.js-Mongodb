@@ -5,6 +5,7 @@ import {useAppStore} from "@/store";
 
 const chatheader = () => {
   const {closeChat ,selectedChatData, selectedChatType} = useAppStore();
+  
   return (
     <div className="h-[13vh] w-full border-b-2 border-[#2f303b] px-5">
       <div className="flex gap-5 items-center my-3 justify-between">
@@ -35,7 +36,7 @@ const chatheader = () => {
         </div>
         </div>
         <div className="flex items-center justify-center gap-5">
-          <button className="text-neutral-500 focus:border-none focus:outline-none focus:text-white duration-300 transition-all">
+          <button className="text-neutral-500 focus:border-none focus:outline-none focus:text-white duration-300 transition-all" onClick={()=>closeChat()}>
              <RiCloseFill className="text-3xl"/>
           </button>
         </div>
