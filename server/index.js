@@ -7,6 +7,7 @@ import authroute from './routes/AuthRoute.js';
 import contactRoutes from './routes/contactroutes.js';
 import messagesRoutes from './routes/MessagesRoutes.js';
 import setupsocket from './socket.js';
+import channelRoutes from './routes/ChannelRoutes.js';
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.use(express.json());
 app.use('/api/auth',authroute)
 app.use('/api/contacts',contactRoutes)
 app.use('/api/messages',messagesRoutes)
+app.use('/api/channel',channelRoutes)
 
 const port = process.env.PORT || 5002;
 const database = process.env.MONGODB_CONNECTION;

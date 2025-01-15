@@ -1,27 +1,39 @@
 import React, { useEffect } from 'react';
 import ProfileInfo from './components/profile-info';
 import NewDm from './components/new-dm';
+import Channel from './components/CreateChannel';
 import ContactList from './components/contact-list';
 import { useAppStore } from '@/store';
 import axios from 'axios';
 import HOST from '@/utils/constants';
 function ContactContainer() {
 
-  const {selectedChatType , setDirectMessagesContacts, directMessagesContacts} = useAppStore()
+  const {selectedChatType , setDirectMessagesContacts, directMessagesContacts, channels , setChannel} = useAppStore()
 
   useEffect(()=>{
     const getcontacts = async ( ) =>{
-        const response = await axios.get(`${HOST}/api/contacts/get-contact-dm`,{withCredentials:true});
-        if(response.data.contacts){
-          setDirectMessagesContacts(response.data.contacts);
+      const response = await axios.get(`${HOST}/api/contacts/get-contact-dm`,{withCredentials:true});
+      if(response.data.contacts){
+        setDirectMessagesContacts(response.data.contacts);
+      }
+    }
+  
+    const getChannels = async ( ) =>{
+        const response = await axios.get(`${HOST}/api/channel/get-channels`,{withCredentials:true});
+        if(response.data.channel){
+          
+          setChannel(response.data.channel);
         }
     }
 
     getcontacts();
-  },[])
+    getChannels();
+  },[setDirectMessagesContacts,setChannel])
+
+  
     
     return (
-        <div className={`relative md:w-[35vw] lg:w-[30vw] xl:w-[25vw] bg-[#1b1c24] border-r-2 border-[#2f303b] w-screen ${selectedChatType ? 'hidden md:block' : ''}`}>
+        <div className={`relative md:w-[35vw] lg:w-[30vw] xl:w-[25vw] bg-[#1b1c24] border-r-2 border-[#2f303b] w-screen ${selectedChatType ? 'hidden md:block' : ""}`}>
             <div>
             <Logo/>
             </div>
@@ -30,13 +42,17 @@ function ContactContainer() {
                  <Title text="Direct Messages"/>
                  <NewDm/>
                  </div>
-                 <div className='max-h-[38vh] overflow-y-auto scrollbar-hidden'>
+                 <div className='max-h-[30vh] overflow-y-auto scrollbar-hidden'>
                  <ContactList contact={directMessagesContacts}/>
                  </div>
             </div>
             <div className='my-5'>
                  <div className='flex items-center justify-between pr-10'>
                  <Title text="Channels"/>
+                 <Channel/>
+                 </div>
+                 <div className='max-h-[38vh] overflow-y-auto scrollbar-hidden'>
+                 <ContactList contact={channels} isChannel={true}/>
                  </div>
             </div>
             <ProfileInfo/>

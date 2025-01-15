@@ -11,27 +11,32 @@ const chatheader = () => {
       <div className="flex gap-5 items-center my-3 justify-between">
         <div className="flex gap-3 items-center bg-[#2a2b33] px-4  py-2 sm:w-[40vw] md:w-[35vw] lg:w-[30vw] xl:w-[25vw] rounded-lg mb-3">
         <div className="w-14 h-12 relative">
-          <div className="h-10 w-10 md:h-12 md:w-12 rounded-full overflow-hidden">
-            {selectedChatData.images ? (
-              <img
-                src={`${HOST}/${selectedChatData.images}`}
-                alt="Profile"
-                className="object-cover w-full h-full bg-black"
-              />
-            ) : (
-              <div
-                className={`uppercase h-10 w-10 md:h-12 md:w-12 text-lg border-[1px] flex items-center justify-center rounded-full ${getColor(
-                  selectedChatData.color
-                )}`}
-              >
-                {selectedChatData.firstName
-                  ? selectedChatData.firstName.split("").shift()
-                  : selectedChatData.email.split("").shift()}
-              </div>
-            )}
-          </div>
+         {
+          selectedChatType === 'contact' ?  <div className="h-10 w-10 md:h-12 md:w-12 rounded-full overflow-hidden">
+          {selectedChatData.images ? (
+            <img
+              src={`${HOST}/${selectedChatData.images}`}
+              alt="Profile"
+              className="object-cover w-full h-full bg-black"
+            />
+          ) : (
+            <div
+              className={`uppercase h-10 w-10 md:h-12 md:w-12 text-lg border-[1px] flex items-center justify-center rounded-full ${getColor(
+                selectedChatData.color
+              )}`}
+            >
+              {selectedChatData.firstName
+                ? selectedChatData.firstName.split("").shift()
+                : selectedChatData.email.split("").shift()}
+            </div>
+          )}
+        </div> : <div className="bg-[#ffffff22] h-10 w-10 flex items-center rounded-full justify-center">
+        #
+      </div>
+         }
         </div>
         <div>
+        {selectedChatType === 'channel' && selectedChatData.name}
          {selectedChatType === "contact" && selectedChatData.firstName ? `${selectedChatData.firstName} ${selectedChatData.lastName}` : selectedChatData.email}
         </div>
         </div>

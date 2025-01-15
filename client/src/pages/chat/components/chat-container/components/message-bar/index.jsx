@@ -13,14 +13,9 @@ const messagebar = () => {
   const socket = useSocket()
   const [message, setmessage] = useState("");
   const [showemoji, setshowemoji] = useState(false);
-  const {selectedChatType ,selectedChatData, userInfo,isUploading,
-    isDownloading,
-    uploadPercentage,
-    downloadPercentage,
+  const {selectedChatType ,selectedChatData, userInfo,
     setisUploading,
-    setisDownloading,
-    setuploadingPercentage,
-    setdownloadingPercentage,} = useAppStore()
+    setuploadingPercentage} = useAppStore()
 
   const handleaddemoji = (emoji) => {
     setmessage((message) => message+ emoji.emoji);
@@ -36,7 +31,16 @@ const messagebar = () => {
         fileURL: undefined
       })
       setmessage("")
+     }else if(selectedChatType === "channel"){
+      socket.emit("send-channel-message",{
+        sender: userInfo.id,
+        content: message,
+        messageType: "text",
+        fileURL: undefined,
+        channelId:selectedChatData._id
+      })
      }
+     setmessage("");
   };
 
   const handleAttachment = () =>{
@@ -69,13 +73,21 @@ const messagebar = () => {
             messageType: "file",
             fileURL: response.data.filePath
           })
+         }else if(selectedChatType === 'channel'){
+          socket.emit("send-channel-message",{
+            sender: userInfo.id,
+            content: message,
+            messageType: 'file',
+            fileURL: response.data.filePath,
+            channelId:selectedChatData._id
+          })
          }
         }
       }
-      console.log({file: file});
+      fileref.current.value = null;
     } catch (error) {
       setisUploading(false)
-      console.log(error);
+      console.log(error.message);
     }
   }
 

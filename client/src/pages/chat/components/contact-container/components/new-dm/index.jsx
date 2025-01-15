@@ -52,7 +52,7 @@ function Index() {
             <Tooltip id="tooltip-add" content="Select New Contact" />
 
             {openNewContact == true ? (
-                <div className="fixed inset-0 transition-all duration-400 bg-black bg-opacity-80 z-40" onClick={() => setOpenNewContact(false)
+                <div className="fixed inset-0 transition-all duration-400 bg-black backdrop-blur-sm bg-opacity-80 z-40" onClick={() => setOpenNewContact(false)
                 }/>) : null
             }
 
